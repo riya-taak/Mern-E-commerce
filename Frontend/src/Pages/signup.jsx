@@ -1,8 +1,11 @@
 import { useState } from "react";
 import api from "../api/axios";
+import { useNavigate } from "react-router";
+
 
 
 export default function Signup() {
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -11,23 +14,45 @@ export default function Signup() {
 
     const [msg, setMsg] = useState("");
 
-    const handleChange=(e)=>{
+    const handleChange = (e) => {
         setForm({
             ...form,
-            [e.target.name]:e.target.value
+            [e.target.name]: e.target.value
         });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
-            const response = await api.post("auth/signup",form);
-            setMsg(response.data.message);
-        } catch(err){
-            setMsg(err.response.data.message || "An error occurred");
+        try {
+            const data = {
+              name: e.target[0].value,
+              email:e.target[1].value,
+             password:e.target[2].value
 
+
+            };
+            const res = await fetch("http://localhost:5001/api/auth/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+
+            });
+            const response = await res.json();
+
+            if (!res.ok) {
+                throw new Error(response.message || "Something went wrong");
+            }
+
+            navigate("/login");
+            setMsg(response.message);
         }
-    }
+        catch (err) {
+            console.log("error", err);
+            setMsg(err.message || "An error occurred");
+        }
+    };
 
     return (
         <div className="flex item-center justify-center min-h-screen bg-grey-100 px-4">
@@ -56,7 +81,7 @@ export default function Signup() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 
                     />
-                      <input
+                    <input
                         name='password'
                         type='password'
                         placeholder="Enter password"
@@ -65,9 +90,9 @@ export default function Signup() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 
                     />
-                    <button 
-                    type="submit"
-                    className="w-full px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    <button
+                        type="submit"
+                        className="w-full px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         Sign Up
                     </button>
