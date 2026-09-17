@@ -25,9 +25,9 @@ export default function Signup() {
         e.preventDefault();
         try {
             const data = {
-              name: e.target[0].value,
-              email:e.target[1].value,
-             password:e.target[2].value
+                name: e.target[0].value,
+                email: e.target[1].value,
+                password: e.target[2].value
 
 
             };
@@ -44,9 +44,11 @@ export default function Signup() {
             if (!res.ok) {
                 throw new Error(response.message || "Something went wrong");
             }
-
-            navigate("/login");
             setMsg(response.message);
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 5000);
         }
         catch (err) {
             console.log("error", err);

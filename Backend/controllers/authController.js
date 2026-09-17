@@ -37,19 +37,25 @@ export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required" });
+            return res.status(400).json({ message: "Email and password are required" 
+             });
         }
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: "Please enter a valid email" });
+            return res.status(400).json({ message: "Please enter a valid email" 
+            
+             });
         }
         
         
         const userExists = await User.findOne({ email });
         
         if (!userExists) {
-            return res.status(400).json({ message: "user not registered , please signUp" })
+            return res.status(404).json({ 
+                message: "user not registered , please signUp"
+        
+             })
         }
         const match = await userExists.matchPassword(password);
         if (match) {
@@ -57,10 +63,13 @@ export const loginUser = async (req, res) => {
             const token = jwt.sign({id }, process.env.JWT_SECRET, {
                 expiresIn: process.env.JWT_EXPIRES_IN || "1d" });
                 console.log(match);
-                res.status(200).json({token, message: "login sucessfully" })
+                res.status(200).json({
+                    token, message: "login sucessfully" 
+                })
         }
         else {
-            res.status(400).json({ message: "Invalid password" })
+            res.status(400).json({ message: "Invalid password" 
+            })
         }
     }
     catch (error) {

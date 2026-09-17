@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import api from "../api/axios";
-import { useNavigate } from "react-router";
 
 
 export default function Login() {
@@ -18,43 +16,49 @@ export default function Login() {
             [e.target.name]: e.target.value
         });
     }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        alert("dfghjk");
-        try {
-            const data = {
-                email: e.target[1].value,
-                password: e.target[2].value
+   const handleSubmit = async (e) => {
+       e.preventDefault();
+       try {
+           const data = {
+               email: e.target[0].value,
+               password: e.target[1].value
             }
             const res = await fetch("http://localhost:5001/api/auth/login", {
-                method: "post",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
-
             });
             const response = await res.json();
-
+            
             if (!res.ok) {
-                throw new Error(response.message || "Something went wrong");
-            }
-            // localStorage.setItem("token", res.data.token);
-            console.log(response);
-            // setMsg("login sucessfully");
-            // setTimeout(() => {
-            //     navigate("/home");
-            // }, 1000)
-        }
-        catch (err) {
-            setMsg(err.response?.data?.message || "An error occurred");
-        }
+                    throw new Error(response.message || "Something went wrong");
+                }
+                
+                localStorage.setItem("token", response.token);
+
+                setMsg(response.message);
+            
+            
+        setTimeout(() => {
+            navigate("/admin/products");
+        }, 1000);
     }
+    catch (err) {
+        // console.log(err,"dfhgf56789");
+        setMsg(err.message || "An error occurred");
+    }
+}
     return (
         <div className="flex item-center justify-content min-h-screen bg-gray-100 px-4">
             <div className="bg-white p-8 rounded-lg shawdow-md w-full max-w-sm">
                 <h2 className="text-2xl font-blod mb-6 text-center ">login to your Account</h2>
-
+                {msg && (
+                    <div className="mb-4 text-center text-sm text-blue-600 font-medium">
+                        {msg}
+                    </div>
+                )}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         name="email"

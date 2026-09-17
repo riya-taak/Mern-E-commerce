@@ -1,16 +1,15 @@
 import { useState } from "react";
-import api from "../api/axios";
+// import api from "../api/axios";
 import { useNavigate } from "react-router";
 
-export default function AddProduct()
-{
-    const [form , setForm] = useState({
-        title:"",
-        description:"",
-        price:"",
-        category:"",
-        image:"",
-        stock:"",
+export default function AddProduct() {
+    const [form, setForm] = useState({
+        title: "",
+        description: "",
+        price: "",
+        category: "",
+        image: "",
+        stock: "",
 
     });
 
@@ -26,13 +25,33 @@ export default function AddProduct()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
-            await api.post("/Products/add", form);
-            alert("Product Added sucessfully");
-            navigate("admin/products")
-        }catch(error)
-        {
-            console.error("Error adding product:" ,err);
+        try {
+            // await api.post("/Products/add", form);
+            const data = {
+                "title": e.target[0].value,
+                "price": e.target[2].value,
+                "description": e.target[1].value,
+                "category": e.target[3].value,
+                "image": e.target[4].value,
+                "stock": e.target[5].value
+            }
+            const res = await fetch("http://localhost:5001/api/products/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            const response = await res.json();
+
+            alert(response.message);
+            setTimeout(()=>{
+
+                navigate("/admin/products")
+            },2000)
+
+        } catch (error) {
+            console.error("Error adding product:", error);
         }
     }
 
@@ -42,13 +61,13 @@ export default function AddProduct()
             <form onSubmit={handleSubmit} className="space-y-3">
                 {
                     Object.keys(form).map((key) => (
-                        <input 
-                        key={key}
-                        name = {key}
-                        value = {form[key]}
-                        onChange={handleChange}
-                        placeholder={key}
-                        className="w-full p-2 border border-grey-300 rounded" 
+                        <input
+                            key={key}
+                            name={key}
+                            value={form[key]}
+                            onChange={handleChange}
+                            placeholder={key}
+                            className="w-full p-2 border border-grey-300 rounded"
                         />
                     ))
                 }
