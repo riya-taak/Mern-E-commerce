@@ -74,9 +74,9 @@ export default function ProductList() {
                             <td className="border border-gray-200 px-4 py-2">{product.price}</td>
                             <td className="border border-gray-200 px-4 py-2">{product.stock}</td>
                             <td className="border border-gray-200 px-4 py-2 flex gap-2 justify-center">
-                                <Link to={`/admin/products/update/${product._id}`} className="">Edit</Link>
-                                <button onClick={() => deleteProduct(product._id)}
-                                    className="text-red-500 hover:underline">
+                                <Link to={`/admin/products/update/${product._id}`} className=" px-5 py-1 rounded-sm cursor-pointer bg-blue-500 text-white">Edit</Link>
+                                <button onClick={() => deleteProduct(product._id) }
+                                    className="cursor-pointer bg-red-500 text-white px-5 py-1 rounded-sm">
                                     Delete
                                 </button>
                             </td>
